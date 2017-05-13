@@ -25,10 +25,8 @@ fetch_nginx_tarball() {
 
 echo -n "-----> Installing NGINX..."
 mkdir -p $build_dir/bin
-mkdir -p $build_dir/var/{log/nginx,run}
-mkdir -p $build_dir/nginx/{conf.d,include,sites-enabled}
+mkdir -p $build_dir/nginx/{conf.d,include,logs,sites-enabled}
 cp $bp_dir/nginx/* $build_dir/nginx
 cp $bp_dir/bin/nginx-generic $build_dir/bin
-echo "listen ${PORT};" > $build_dir/nginx/include/listen
 $(fetch_nginx_tarball) | tar xzC $build_dir/bin
 echo " Done."
