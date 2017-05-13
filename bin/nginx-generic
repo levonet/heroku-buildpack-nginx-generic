@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# bin/nginx-generic
+# run nginx
+
+echo "at=start-nginx"
+exec /app/bin/nginx \
+    -p /app/nginx \
+    -c /app/nginx/nginx.conf \
+    -g "pid /app/var/run/nginx.pid; worker_processes ${NGINX_WORKERS:-4}; daemon ${DAEMON:-off}"

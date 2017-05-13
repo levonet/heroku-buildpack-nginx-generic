@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+# heroku inline buildpack
+
+set -e
+
+build_dir=$1
+cache_dir=$2
+env_dir=$3
+bp_dir=$(dirname $(dirname $0))
+
+fetch_nginx_tarball() {
+    local version="1.9.5"
+    local tarball_file="nginx-$version.tgz"
+    local stack="cedar-14"
+    local nginx_tarball_url="https://s3-external-1.amazonaws.com/heroku-spark/nginx-1.9.5.tgz"
+    local dest_path="$cache_dir/$stack/$tarball_file"
+
+    if [ -f "$dest_path" ]; then
+        echo -n "cat $dest_path"
+    else
+        echo -n "curl -s -L $nginx_tarball_url > $dest_path && cat $dest_path"
+    fi
+}
+
+echo -n "-----> Installing NGINX..."
+mkdir -p $build_dir/bin
+mkdir -p $build_dir/var/{log/nginx,run}
+mkdir -p $build_dir/nginx/{conf.d,include,sites-enabled}
+cp $bp_dir/nginx/* $build_dir/nginx
+cp $bp_dir/bin/nginx-generic $build_dir/bin
+echo "listen ${PORT};" > $build_dir/nginx/include/listen
+$(fetch_nginx_tarball) | tar xzC $build_dir/bin
+echo " Done."

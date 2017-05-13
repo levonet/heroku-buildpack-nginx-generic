@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# bin/detect
+# heroku inline buildpack
+echo "nginx-generic"
+exit 0
